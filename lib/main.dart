@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:pluxee_web_poc/presentation/pages/signup/login_page.dart';
 import 'package:provider/provider.dart';
 
 import 'data/datasources/get_dog_image_datasource.dart'
@@ -7,7 +8,7 @@ import 'data/datasources/get_dog_image_datasource.dart'
 import 'data/repositories/get_dog_image_repository.dart'
     show GetDogImageRepository;
 import 'domain/usecases/get_dog_image_usecase.dart' show GetDogImageUsecase;
-import 'presentation/pages/dog_image_page.dart';
+
 import 'presentation/providers/dog_provider.dart';
 
 void main() {
@@ -19,9 +20,9 @@ void main() {
           (_) =>
               DogProvider(getDogImageUsecase: GetDogImageUsecase(repository)),
       child: MaterialApp(
-        title: 'Test Live Code',
-        theme: ThemeData(primarySwatch: Colors.blue),
-        home: DogImagePage(),
+        title: 'Pluxee Web POC',
+        theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'plx'),
+        home: LoginPage(),
       ),
     ),
   );
