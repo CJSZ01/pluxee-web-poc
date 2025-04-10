@@ -1,7 +1,7 @@
 import '../domain.dart';
 
 abstract class IGetProductUseCase {
-  Future<List<Product>> getProducts();
+  Future<List<Product>> call();
 }
 
 class GetProductUseCase implements IGetProductUseCase {
@@ -10,7 +10,7 @@ class GetProductUseCase implements IGetProductUseCase {
   GetProductUseCase({required this.repository});
 
   @override
-  Future<List<Product>> getProducts() async {
+  Future<List<Product>> call() async {
     try {
       return await repository.getProducts();
     } catch (e) {
