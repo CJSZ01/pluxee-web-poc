@@ -31,9 +31,10 @@ class _LoginPageState extends State<LoginPage> {
         listener: (context, state) {
           if (state.status == LoginPageStatus.success) {
             ScaffoldMessenger.of(context).clearSnackBars();
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text('Login successful')));
+            // ScaffoldMessenger.of(
+            //   context,
+            // ).showSnackBar(SnackBar(content: Text('Login successful')));
+            Navigator.pushReplacementNamed(context, Navigation.routes.products);
           }
           if (state.error.isNotEmpty) {
             ScaffoldMessenger.of(
