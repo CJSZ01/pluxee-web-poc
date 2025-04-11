@@ -24,14 +24,25 @@ class _ProductListPageState extends State<ProductListPage> {
 
   Widget _buildDrawer() {
     return Drawer(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(0)),
+      ),
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
           DrawerHeader(
-            decoration: BoxDecoration(color: AppColors.secondary),
-            child: const Text(
-              'Side Menu',
-              style: TextStyle(color: Colors.white, fontSize: 24),
+            padding: const EdgeInsets.only(left: 20, top: 20),
+            decoration: BoxDecoration(
+              color: AppColors.primary,
+              shape: BoxShape.rectangle,
+            ),
+            child: Text(
+              'Pluxee Web POC',
+              style: TextStyle(
+                color: AppColors.secondary,
+                fontSize: 28,
+                fontWeight: FontWeight.w900,
+              ),
             ),
           ),
           ListTile(
@@ -66,8 +77,11 @@ class _ProductListPageState extends State<ProductListPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dashboard'),
-        backgroundColor: AppColors.primary,
+        title: const Text(
+          'Products',
+          style: TextStyle(fontSize: 24, color: Colors.white),
+        ),
+        backgroundColor: AppColors.secondary,
         leading:
             isSmallScreen
                 ? Builder(
