@@ -24,14 +24,25 @@ class _ProductListPageState extends State<ProductListPage> {
 
   Widget _buildDrawer() {
     return Drawer(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(0)),
+      ),
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
           DrawerHeader(
-            decoration: BoxDecoration(color: AppColors.secondary),
-            child: const Text(
-              'Side Menu',
-              style: TextStyle(color: Colors.white, fontSize: 24),
+            padding: const EdgeInsets.only(left: 20, top: 20),
+            decoration: BoxDecoration(
+              color: AppColors.primary,
+              shape: BoxShape.rectangle,
+            ),
+            child: Text(
+              'Pluxee Web POC',
+              style: TextStyle(
+                color: AppColors.secondary,
+                fontSize: 28,
+                fontWeight: FontWeight.w900,
+              ),
             ),
           ),
           ListTile(
@@ -66,8 +77,11 @@ class _ProductListPageState extends State<ProductListPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dashboard'),
-        backgroundColor: AppColors.primary,
+        title: const Text(
+          'Products',
+          style: TextStyle(fontSize: 24, color: Colors.white),
+        ),
+        backgroundColor: AppColors.secondary,
         leading:
             isSmallScreen
                 ? Builder(
@@ -157,20 +171,31 @@ class _ProductListPageState extends State<ProductListPage> {
                                 final isSmallCard = constraints.maxWidth < 200;
                                 return Card(
                                   child: Container(
-                                    padding: const EdgeInsets.all(20),
+                                    padding: EdgeInsets.all(
+                                      constraints.maxWidth * 0.05,
+                                    ),
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
                                         SizedBox(
-                                          height: isSmallCard ? 100 : 200,
-                                          width: isSmallCard ? 100 : 200,
+                                          height: constraints.maxHeight * 0.4,
+                                          width: constraints.maxWidth * 0.8,
                                           child: Image.network(
                                             product.thumbnail ?? '',
                                             fit: BoxFit.cover,
+                                            errorBuilder: (
+                                              context,
+                                              error,
+                                              stackTrace,
+                                            ) {
+                                              return const Icon(Icons.error);
+                                            },
                                           ),
                                         ),
-                                        const SizedBox(height: 8),
+                                        SizedBox(
+                                          height: constraints.maxHeight * 0.02,
+                                        ),
                                         FittedBox(
                                           fit: BoxFit.scaleDown,
                                           child: Text(
@@ -182,7 +207,9 @@ class _ProductListPageState extends State<ProductListPage> {
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                         ),
-                                        const SizedBox(height: 4),
+                                        SizedBox(
+                                          height: constraints.maxHeight * 0.02,
+                                        ),
                                         if (!isSmallCard)
                                           Text(
                                             product.description ?? '',
