@@ -5,4 +5,5 @@ final class SecureStorageKeys {
 
 final class StorageKeys {
   StorageKeys._();
+  static String get cart => 'SK_CART';
 }
