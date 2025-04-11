@@ -235,7 +235,6 @@ class _ProductListPageState extends State<ProductListPage> {
                                 : constraints.maxWidth > 800
                                 ? 4
                                 : 2;
-
                         return GridView.builder(
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
@@ -244,7 +243,7 @@ class _ProductListPageState extends State<ProductListPage> {
                                 mainAxisSpacing: 20,
                                 childAspectRatio: 1,
                               ),
-                          padding: const EdgeInsets.all(20),
+                          padding: EdgeInsets.all(20),
                           itemCount: state.products.length,
                           itemBuilder: (context, index) {
                             final product = state.products[index];
@@ -257,20 +256,25 @@ class _ProductListPageState extends State<ProductListPage> {
                                   },
                                   child: Card(
                                     child: Container(
-                                      padding: const EdgeInsets.all(20),
+                                      padding: EdgeInsets.all(
+                                        constraints.maxWidth * 0.05,
+                                      ),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
                                           SizedBox(
-                                            height: isSmallCard ? 100 : 200,
-                                            width: isSmallCard ? 100 : 200,
+                                            height: constraints.maxHeight * 0.4,
+                                            width: constraints.maxWidth * 0.8,
                                             child: Image.network(
                                               product.thumbnail ?? '',
                                               fit: BoxFit.cover,
                                             ),
                                           ),
-                                          const SizedBox(height: 8),
+                                          SizedBox(
+                                            height:
+                                                constraints.maxHeight * 0.02,
+                                          ),
                                           FittedBox(
                                             fit: BoxFit.scaleDown,
                                             child: Text(
@@ -278,17 +282,19 @@ class _ProductListPageState extends State<ProductListPage> {
                                               style: const TextStyle(
                                                 fontWeight: FontWeight.bold,
                                               ),
-                                              maxLines: isSmallCard ? 1 : 2,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 4),
-                                          if (!isSmallCard)
-                                            Text(
-                                              product.description ?? '',
                                               maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
                                             ),
+                                          ),
+                                          SizedBox(
+                                            height:
+                                                constraints.maxHeight * 0.02,
+                                          ),
+                                          Text(
+                                            product.description ?? '',
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                           const Spacer(),
                                           Text(
                                             '\$${product.price}',
