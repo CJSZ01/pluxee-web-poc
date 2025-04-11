@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pluxee_web_poc/domain/entities/product_entity.dart';
+import 'package:pluxee_web_poc/presentation/pages/product_list/components/product_details.dart';
 
 import '../../../core/constants/colors.dart';
 import 'product_list_cubit.dart';
@@ -50,6 +52,81 @@ class _ProductListPageState extends State<ProductListPage> {
             title: const Text('Home'),
             onTap: () {
               // Handle navigation to Home
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.shopping_cart),
+            title: const Text('Cart'),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder:
+                    (
+                      context,
+                    ) => BlocBuilder<ProductListCubit, ProductListState>(
+                      bloc: cubit,
+                      builder:
+                          (context, state) => Dialog(
+                            child:
+                                state.cart.isEmpty
+                                    ? SizedBox(
+                                      width: 100,
+                                      height: 100,
+                                      child: Icon(
+                                        Icons.remove_shopping_cart_outlined,
+                                        size: 48,
+                                      ),
+                                    )
+                                    : Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: ListView.builder(
+                                            shrinkWrap: true,
+                                            itemCount: state.cart.length,
+                                            itemBuilder:
+                                                (context, index) => Row(
+                                                  children: [
+                                                    SizedBox(
+                                                      height: 50,
+                                                      width: 50,
+                                                      child: Image.network(
+                                                        state
+                                                            .cart[index]
+                                                            .images
+                                                            .first,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      state.cart[index].title ??
+                                                          '',
+                                                    ),
+                                                  ],
+                                                ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: IconButton(
+                                            onPressed: () async {
+                                              await cubit.clearCart();
+                                              if (context.mounted) {
+                                                Navigator.pop(context);
+                                              }
+                                            },
+                                            icon: Icon(
+                                              Icons
+                                                  .remove_shopping_cart_outlined,
+                                              size: 36,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                          ),
+                    ),
+              );
             },
           ),
           ListTile(
@@ -130,17 +207,22 @@ class _ProductListPageState extends State<ProductListPage> {
                       itemCount: state.products.length,
                       itemBuilder: (context, index) {
                         final product = state.products[index];
-                        return Card(
-                          margin: const EdgeInsets.only(bottom: 10),
-                          child: ListTile(
-                            leading: SizedBox(
-                              height: 50,
-                              width: 50,
-                              child: Image.network(product.thumbnail ?? ''),
+                        return InkWell(
+                          onTap: () {
+                            showDetails(context, state, index);
+                          },
+                          child: Card(
+                            margin: const EdgeInsets.only(bottom: 10),
+                            child: ListTile(
+                              leading: SizedBox(
+                                height: 50,
+                                width: 50,
+                                child: Image.network(product.thumbnail ?? ''),
+                              ),
+                              title: Text(product.title ?? ''),
+                              subtitle: Text(product.description ?? ''),
+                              trailing: Text('\$${product.price}'),
                             ),
-                            title: Text(product.title ?? ''),
-                            subtitle: Text(product.description ?? ''),
-                            trailing: Text('\$${product.price}'),
                           ),
                         );
                       },
@@ -169,61 +251,53 @@ class _ProductListPageState extends State<ProductListPage> {
                             return LayoutBuilder(
                               builder: (context, constraints) {
                                 final isSmallCard = constraints.maxWidth < 200;
-                                return Card(
-                                  child: Container(
-                                    padding: EdgeInsets.all(
-                                      constraints.maxWidth * 0.05,
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        SizedBox(
-                                          height: constraints.maxHeight * 0.4,
-                                          width: constraints.maxWidth * 0.8,
-                                          child: Image.network(
-                                            product.thumbnail ?? '',
-                                            fit: BoxFit.cover,
-                                            errorBuilder: (
-                                              context,
-                                              error,
-                                              stackTrace,
-                                            ) {
-                                              return const Icon(Icons.error);
-                                            },
+                                return InkWell(
+                                  onTap: () {
+                                    showDetails(context, state, index);
+                                  },
+                                  child: Card(
+                                    child: Container(
+                                      padding: const EdgeInsets.all(20),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            height: isSmallCard ? 100 : 200,
+                                            width: isSmallCard ? 100 : 200,
+                                            child: Image.network(
+                                              product.thumbnail ?? '',
+                                              fit: BoxFit.cover,
+                                            ),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          height: constraints.maxHeight * 0.02,
-                                        ),
-                                        FittedBox(
-                                          fit: BoxFit.scaleDown,
-                                          child: Text(
-                                            product.title ?? '',
+                                          const SizedBox(height: 8),
+                                          FittedBox(
+                                            fit: BoxFit.scaleDown,
+                                            child: Text(
+                                              product.title ?? '',
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              maxLines: isSmallCard ? 1 : 2,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          if (!isSmallCard)
+                                            Text(
+                                              product.description ?? '',
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          const Spacer(),
+                                          Text(
+                                            '\$${product.price}',
                                             style: const TextStyle(
                                               fontWeight: FontWeight.bold,
                                             ),
-                                            maxLines: isSmallCard ? 1 : 2,
-                                            overflow: TextOverflow.ellipsis,
                                           ),
-                                        ),
-                                        SizedBox(
-                                          height: constraints.maxHeight * 0.02,
-                                        ),
-                                        if (!isSmallCard)
-                                          Text(
-                                            product.description ?? '',
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        const Spacer(),
-                                        Text(
-                                          '\$${product.price}',
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 );
@@ -238,6 +312,23 @@ class _ProductListPageState extends State<ProductListPage> {
           ),
         ],
       ),
+    );
+  }
+
+  Future<dynamic> showDetails(
+    BuildContext context,
+    ProductListState state,
+    int index,
+  ) {
+    return showDialog(
+      context: context,
+      builder:
+          (context) => ProductDetails(
+            product: state.products[index],
+            onAddToCart: (Product product) {
+              cubit.updateCart(product);
+            },
+          ),
     );
   }
 }
