@@ -1,9 +1,0 @@
-export 'entities/dimensions_entity.dart';
-export 'entities/entities.dart';
-export 'entities/meta_entity.dart';
-export 'entities/product_entity.dart';
-export 'entities/review_entity.dart';
-export 'repositories/i_get_product_usecase.dart';
-export 'repositories/repositories.dart';
-export 'usecases/get_product_usecase.dart';
-export 'usecases/usecases.dart';
