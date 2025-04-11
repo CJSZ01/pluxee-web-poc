@@ -157,20 +157,31 @@ class _ProductListPageState extends State<ProductListPage> {
                                 final isSmallCard = constraints.maxWidth < 200;
                                 return Card(
                                   child: Container(
-                                    padding: const EdgeInsets.all(20),
+                                    padding: EdgeInsets.all(
+                                      constraints.maxWidth * 0.05,
+                                    ),
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
                                         SizedBox(
-                                          height: isSmallCard ? 100 : 200,
-                                          width: isSmallCard ? 100 : 200,
+                                          height: constraints.maxHeight * 0.4,
+                                          width: constraints.maxWidth * 0.8,
                                           child: Image.network(
                                             product.thumbnail ?? '',
                                             fit: BoxFit.cover,
+                                            errorBuilder: (
+                                              context,
+                                              error,
+                                              stackTrace,
+                                            ) {
+                                              return const Icon(Icons.error);
+                                            },
                                           ),
                                         ),
-                                        const SizedBox(height: 8),
+                                        SizedBox(
+                                          height: constraints.maxHeight * 0.02,
+                                        ),
                                         FittedBox(
                                           fit: BoxFit.scaleDown,
                                           child: Text(
@@ -182,7 +193,9 @@ class _ProductListPageState extends State<ProductListPage> {
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                         ),
-                                        const SizedBox(height: 4),
+                                        SizedBox(
+                                          height: constraints.maxHeight * 0.02,
+                                        ),
                                         if (!isSmallCard)
                                           Text(
                                             product.description ?? '',
